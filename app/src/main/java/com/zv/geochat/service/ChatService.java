@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import java.util.Random;
 
 import com.zv.geochat.notification.NotificationDecorator;
 
@@ -21,6 +22,10 @@ public class ChatService extends Service {
     public static final int CMD_RECEIVE_MESSAGE = 40;
     public static final String KEY_MESSAGE_TEXT = "message_text";
     public static final String KEY_USER_NAME = "user_name";
+
+    public static final int CMD_CONNECT_ERROR_25 = 25;
+
+    public static final int CMD_SEND_RANDOM_ID = 94;
 
     private NotificationManager notificationMgr;
     private PowerManager.WakeLock wakeLock;
@@ -85,17 +90,34 @@ public class ChatService extends Service {
         Log.d(TAG, "-(<- received command data to service: command=" + command);
         if (command == CMD_JOIN_CHAT) {
             String userName = (String) data.get(KEY_USER_NAME);
+            Log.i(TAG, "Joining Chat... Connecting as User: " + userName);
             notificationDecorator.displaySimpleNotification("Joining Chat...", "Connecting as User: " + userName);
         } else if (command == CMD_LEAVE_CHAT) {
             notificationDecorator.displaySimpleNotification("Leaving Chat...", "Disconnecting");
             stopSelf();
+            Log.i(TAG, "Stopping Service...");
         } else if (command == CMD_SEND_MESSAGE) {
             String messageText = (String) data.get(KEY_MESSAGE_TEXT);
             notificationDecorator.displaySimpleNotification("Sending message...", messageText);
+            Log.i(TAG, "Sending message..." + messageText);
         } else if (command == CMD_RECEIVE_MESSAGE) {
             String testUser = "User2";
             String testMessage = "Simulated Message";
             notificationDecorator.displaySimpleNotification("New message...: "+ testUser, testMessage);
+            Log.i(TAG, "New message...: "+ testUser + "Test message : " + testMessage);
+        } else if (command == CMD_CONNECT_ERROR_25) {
+            //String testUser = "User2";
+            //String testMessage = "Simulated Message";
+            notificationDecorator.displaySimpleNotification("Connect Error",  "Connect Error : 25");
+            Log.i(TAG, "Connect Error : 25");
+        } else if (command == CMD_SEND_RANDOM_ID) {
+            //String testUser = "User2";
+            Random rand = new Random();
+            int maxNumber = 10;
+
+            int randomNumber = rand.nextInt(maxNumber) + 1;
+            notificationDecorator.displaySimpleNotification("Random ID ", "Random ID : " + randomNumber);
+            Log.i(TAG, "Connect Error : 25");
         } else {
             Log.w(TAG, "Ignoring Unknown Command! id=" + command);
         }

@@ -14,7 +14,8 @@ import android.widget.EditText;
 
 import com.zv.geochat.service.ChatService;
 
-public class ChatActivityFragment extends Fragment {
+public class
+ChatActivityFragment extends Fragment {
     private static final String TAG = "ChatActivityFragment";
     EditText edtMessage;
     String userName = "user1";
@@ -66,6 +67,23 @@ public class ChatActivityFragment extends Fragment {
             }
         });
 
+        Button btnConnectError = (Button) v.findViewById(R.id.btnSendConnectError);
+        btnConnectError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendConnectError();
+            }
+        });
+
+        Button btnRandomId= (Button) v.findViewById(R.id.btnSendRandomId);
+        btnRandomId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendRandomId();
+            }
+        });
+
+
         edtMessage = (EditText) v.findViewById(R.id.edtMessage);
 
         loadUserNameFromPreferences();
@@ -107,6 +125,22 @@ public class ChatActivityFragment extends Fragment {
     private void simulateOnMessage(){
         Bundle data = new Bundle();
         data.putInt(ChatService.MSG_CMD, ChatService.CMD_RECEIVE_MESSAGE);
+        Intent intent = new Intent(getContext(), ChatService.class);
+        intent.putExtras(data);
+        getActivity().startService(intent);
+    }
+
+    private void sendConnectError(){
+        Bundle data = new Bundle();
+        data.putInt(ChatService.MSG_CMD, ChatService.CMD_CONNECT_ERROR_25);
+        Intent intent = new Intent(getContext(), ChatService.class);
+        intent.putExtras(data);
+        getActivity().startService(intent);
+    }
+
+    private void sendRandomId(){
+        Bundle data = new Bundle();
+        data.putInt(ChatService.MSG_CMD, ChatService.CMD_SEND_RANDOM_ID);
         Intent intent = new Intent(getContext(), ChatService.class);
         intent.putExtras(data);
         getActivity().startService(intent);
